@@ -34,9 +34,9 @@ static struct topology_val {
 
 } topology_vals[] = {
 	{ "alignment_offset", NULL, blkid_topology_set_alignment_offset },
-	{ "queue/minimum_io_size", blkid_topology_set_minimum_io_size, NULL },
-	{ "queue/optimal_io_size", blkid_topology_set_optimal_io_size, NULL },
-	{ "queue/physical_block_size", blkid_topology_set_physical_sector_size, NULL },
+	{ "queue/minimum_io_size", blkid_topology_set_minimum_io_size },
+	{ "queue/optimal_io_size", blkid_topology_set_optimal_io_size },
+	{ "queue/physical_block_size", blkid_topology_set_physical_sector_size },
 };
 
 static int probe_sysfs_tp(blkid_probe pr,

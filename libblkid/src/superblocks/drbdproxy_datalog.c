@@ -50,6 +50,6 @@ const struct blkid_idinfo drbdproxy_datalog_idinfo =
 	.magics		=
 	{
 		{ .magic = "DRBDdlh*", .len = 8, .sboff = 0, .kboff = 0 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };

@@ -429,7 +429,7 @@ const struct blkid_idinfo gpt_pt_idinfo =
 	 *
 	 * It means we have to always call probe_gpt_pt().
 	 */
-	.magics		= BLKID_NONE_MAGIC,
+	.magics		= BLKID_NONE_MAGIC
 };
 
 
@@ -464,7 +464,7 @@ const struct blkid_idinfo pmbr_pt_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x55\xAA", .len = 2, .sboff = 510 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

@@ -90,7 +90,7 @@ const struct blkid_idinfo netware_idinfo =
 	.magics		=
 	{
 		{ .magic = "SPB5", .len = 4, .kboff = 4 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

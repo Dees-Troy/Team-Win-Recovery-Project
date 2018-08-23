@@ -267,7 +267,7 @@ const struct blkid_idinfo iso9660_idinfo =
 	{
 		{ .magic = "CD001", .len = 5, .kboff = 32, .sboff = 1 },
 		{ .magic = "CDROM", .len = 5, .kboff = 32, .sboff = 9 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

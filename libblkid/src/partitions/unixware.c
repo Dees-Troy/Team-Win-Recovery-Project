@@ -191,7 +191,7 @@ const struct blkid_idinfo unixware_pt_idinfo =
 		  .kboff = UNIXWARE_KBOFFSET,
 		  .sboff = UNIXWARE_MAGICOFFSET
 		},
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

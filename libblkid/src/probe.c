@@ -344,7 +344,7 @@ static const char *blkid_probe_get_probername(blkid_probe pr)
 {
 	struct blkid_chain *chn = blkid_probe_get_chain(pr);
 
-	if (chn && chn->idx >= 0 && (size_t)chn->idx < chn->driver->nidinfos)
+	if (chn && chn->idx >= 0 && chn->idx < chn->driver->nidinfos)
 		return chn->driver->idinfos[chn->idx]->name;
 
 	return NULL;
@@ -575,7 +575,7 @@ unsigned char *blkid_probe_get_buffer(blkid_probe pr,
 		}
 
 		/* someone trying to overflow some buffers? */
-		if (len > (blkid_loff_t)(ULONG_MAX - sizeof(struct blkid_bufinfo))) {
+		if (len > ULONG_MAX - sizeof(struct blkid_bufinfo)) {
 			errno = ENOMEM;
 			return NULL;
 		}

@@ -130,7 +130,7 @@ const struct blkid_idinfo bcache_idinfo =
 		, .kboff = BCACHE_SB_KBOFF
 		, .sboff = BCACHE_SB_MAGIC_OFF
 		} ,
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

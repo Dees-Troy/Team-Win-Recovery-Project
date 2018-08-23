@@ -209,7 +209,7 @@ static int probe_zfs(blkid_probe pr,
 
 	/* If we found the 4th uberblock, then we will have exited from the
 	 * scanning loop immediately, and ub will be a valid uberblock. */
-	blkid_probe_sprintf_version(pr, "%llu", swab_endian ?
+	blkid_probe_sprintf_version(pr, "%" PRIu64, swab_endian ?
 				    swab64(ub->ub_version) : ub->ub_version);
 
 	zfs_extract_guid_name(pr, offset);

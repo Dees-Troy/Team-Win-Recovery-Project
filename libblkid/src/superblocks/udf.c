@@ -196,6 +196,6 @@ const struct blkid_idinfo udf_idinfo =
 		{ .magic = "NSR02", .len = 5, .kboff = 32, .sboff = 1 },
 		{ .magic = "NSR03", .len = 5, .kboff = 32, .sboff = 1 },
 		{ .magic = "TEA01", .len = 5, .kboff = 32, .sboff = 1 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };

@@ -133,7 +133,7 @@ const struct blkid_idinfo swap_idinfo =
 		{ "SWAPSPACE2", 10, 0, 0x7ff6 },
 		{ "SWAP-SPACE", 10, 0, 0xfff6 },
 		{ "SWAPSPACE2", 10, 0, 0xfff6 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 
@@ -172,7 +172,7 @@ const struct blkid_idinfo swsuspend_idinfo =
 		{ "ULSUSPEND", 9, 0, 0xfff6 },
 		{ "LINHIB0001",10,0, 0xfff6 },
 
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

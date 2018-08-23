@@ -477,6 +477,6 @@ const struct blkid_idinfo befs_idinfo =
 							B_OS_NAME_LENGTH },
 		{ .magic = "1SFB", .len = 4, .sboff = 0x200 +
 							B_OS_NAME_LENGTH },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };

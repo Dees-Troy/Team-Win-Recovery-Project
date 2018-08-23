@@ -87,7 +87,7 @@ const struct blkid_idinfo btrfs_idinfo =
 	.magics		=
 	{
 	  { .magic = "_BHRfS_M", .len = 8, .sboff = 0x40, .kboff = 64 },
-	  { NULL, 0, 0, 0 }
+	  { NULL }
 	}
 };
 

@@ -106,7 +106,7 @@ const struct blkid_idinfo reiser_idinfo =
 		{ .magic = "ReIsEr3Fs", .len = 9, .kboff = 64, .sboff = 0x34 },
 		{ .magic = "ReIsErFs",  .len = 8, .kboff = 64, .sboff = 0x34 },
 		{ .magic = "ReIsErFs",  .len = 8, .kboff =  8, .sboff = 20   },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 
@@ -119,7 +119,7 @@ const struct blkid_idinfo reiser4_idinfo =
 	.magics		=
 	{
 		{ .magic = "ReIsEr4", .len = 7, .kboff = 64 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

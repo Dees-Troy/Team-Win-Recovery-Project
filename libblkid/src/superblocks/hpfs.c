@@ -115,7 +115,7 @@ const struct blkid_idinfo hpfs_idinfo =
 		  .len = 4,
 		  .kboff = (HPFS_SB_OFFSET >> 10)
 		},
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

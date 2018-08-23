@@ -18,6 +18,6 @@ const struct blkid_idinfo bfs_idinfo =
 	.usage		= BLKID_USAGE_FILESYSTEM,
 	.magics		= {
 		{ .magic = "\xce\xfa\xad\x1b", .len = 4 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };

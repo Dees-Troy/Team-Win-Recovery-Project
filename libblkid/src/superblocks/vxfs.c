@@ -35,7 +35,7 @@ const struct blkid_idinfo vxfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "\365\374\001\245", .len = 4, .kboff = 1 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

@@ -301,7 +301,7 @@ const struct blkid_idinfo dos_pt_idinfo =
 		 *   511 | 0xAA
 		 */
 		{ .magic = "\x55\xAA", .len = 2, .sboff = 510 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

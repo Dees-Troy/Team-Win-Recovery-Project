@@ -80,7 +80,7 @@ const struct blkid_idinfo highpoint37x_idinfo = {
 		 */
 		{ .magic = "\xf0\x16\x78\x5a", .len = 4, .kboff = 4, .sboff = 544 },
 		{ .magic = "\xfd\x16\x78\x5a", .len = 4, .kboff = 4, .sboff = 544 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

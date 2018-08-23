@@ -178,7 +178,7 @@ const struct blkid_idinfo ocfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "OracleCFS", .len = 9, .kboff = 8 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 
@@ -194,7 +194,7 @@ const struct blkid_idinfo ocfs2_idinfo =
 		{ .magic = "OCFSV2", .len = 6, .kboff = 2 },
 		{ .magic = "OCFSV2", .len = 6, .kboff = 4 },
 		{ .magic = "OCFSV2", .len = 6, .kboff = 8 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 
@@ -207,7 +207,7 @@ const struct blkid_idinfo oracleasm_idinfo =
 	.magics		=
 	{
 		{ .magic = "ORCLDISK", .len = 8, .sboff = 32 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

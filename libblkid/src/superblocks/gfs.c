@@ -112,7 +112,7 @@ const struct blkid_idinfo gfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x01\x16\x19\x70", .len = 4, .kboff = 64 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 
@@ -125,7 +125,7 @@ const struct blkid_idinfo gfs2_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x01\x16\x19\x70", .len = 4, .kboff = 64 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

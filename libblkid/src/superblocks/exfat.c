@@ -143,6 +143,6 @@ const struct blkid_idinfo exfat_idinfo =
 	.magics		=
 	{
 		{ .magic = "EXFAT   ", .len = 8, .sboff = 3 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };

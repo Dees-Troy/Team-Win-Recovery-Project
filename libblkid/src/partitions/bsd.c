@@ -173,7 +173,7 @@ const struct blkid_idinfo bsd_pt_idinfo =
 		{ .magic = "\x57\x45\x56\x82", .len = 4, .sboff = 512 },
 		{ .magic = "\x57\x45\x56\x82", .len = 4, .sboff = 64 },
 		{ .magic = "\x57\x45\x56\x82", .len = 4, .sboff = 128 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

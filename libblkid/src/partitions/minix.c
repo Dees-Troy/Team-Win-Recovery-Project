@@ -96,7 +96,7 @@ const struct blkid_idinfo minix_pt_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x55\xAA", .len = 2, .sboff = 510 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

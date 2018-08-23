@@ -51,7 +51,7 @@ const struct blkid_idinfo aix_pt_idinfo =
 	.magics		=
 	{
 		{ .magic = BLKID_AIX_MAGIC_STRING, .len = BLKID_AIX_MAGIC_STRLEN },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

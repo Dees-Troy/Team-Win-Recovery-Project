@@ -425,7 +425,7 @@ const struct blkid_idinfo vfat_idinfo =
 		{ .magic = "\353",     .len = 1, },
 		{ .magic = "\351",     .len = 1, },
 		{ .magic = "\125\252", .len = 2, .sboff = 0x1fe },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 

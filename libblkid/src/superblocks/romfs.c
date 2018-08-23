@@ -45,7 +45,7 @@ const struct blkid_idinfo romfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "-rom1fs-", .len = 8 },
-		{ NULL, 0, 0, 0 }
+		{ NULL }
 	}
 };
 
