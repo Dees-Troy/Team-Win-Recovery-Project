@@ -33,7 +33,7 @@ LOCAL_MODULE := libminadbd
 LOCAL_CFLAGS := $(minadbd_cflags)
 LOCAL_CONLY_FLAGS := -Wimplicit-function-declaration
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/.. system/core/adb
-LOCAL_WHOLE_STATIC_LIBRARIES := libadbd libasyncio
+LOCAL_WHOLE_STATIC_LIBRARIES := libadbd
 LOCAL_SHARED_LIBRARIES := libbase liblog libcutils libc
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
@@ -43,6 +43,10 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
 else
     LOCAL_SHARED_LIBRARIES += libcrypto \
     $(if $(WITH_CRYPTO_UTILS),libcrypto_utils)
+    ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
+        # Needed in Android 9.0
+        LOCAL_WHOLE_STATIC_LIBRARIES += libasyncio
+    endif
 endif
 
 include $(BUILD_SHARED_LIBRARY)
@@ -70,6 +74,10 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
 else
     LOCAL_SHARED_LIBRARIES += libcrypto \
     $(if $(WITH_CRYPTO_UTILS),libcrypto_utils)
+    ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
+        # Needed in Android 9.0
+        LOCAL_WHOLE_STATIC_LIBRARIES += libasyncio
+    endif
 endif
 
 include $(BUILD_STATIC_LIBRARY)
