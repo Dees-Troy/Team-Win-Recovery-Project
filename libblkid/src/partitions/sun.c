@@ -119,7 +119,7 @@ const struct blkid_idinfo sun_pt_idinfo =
 		  .len = 2,
 		  .sboff = offsetof(struct sun_disklabel, magic)
 		},
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

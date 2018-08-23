@@ -13,6 +13,7 @@
 # limitations under the License.
 
 LOCAL_PATH := $(call my-dir)
+commands_TWRP_local_path := $(LOCAL_PATH)
 
 ifdef project-path-for
     ifeq ($(LOCAL_PATH),$(call project-path-for,recovery))
@@ -143,6 +144,7 @@ endif
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26; echo $$?),0)
    LOCAL_SHARED_LIBRARIES += libziparchive
+   LOCAL_C_INCLUDES += $(LOCAL_PATH)/otautil/include
 else
     LOCAL_SHARED_LIBRARIES += libminzip
     LOCAL_CFLAGS += -DUSE_MINZIP
@@ -160,11 +162,13 @@ ifeq ($(TW_OEM_BUILD),true)
 endif
 
 ifeq ($(TARGET_USERIMAGES_USE_EXT4), true)
-    LOCAL_CFLAGS += -DUSE_EXT4
-    LOCAL_C_INCLUDES += system/extras/ext4_utils
-    LOCAL_SHARED_LIBRARIES += libext4_utils
-    ifneq ($(wildcard external/lz4/Android.mk),)
-        #LOCAL_STATIC_LIBRARIES += liblz4
+    ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 28; echo $$?),0)
+        LOCAL_CFLAGS += -DUSE_EXT4
+        LOCAL_C_INCLUDES += system/extras/ext4_utils
+        LOCAL_SHARED_LIBRARIES += libext4_utils
+        ifneq ($(wildcard external/lz4/Android.mk),)
+            #LOCAL_STATIC_LIBRARIES += liblz4
+        endif
     endif
 endif
 LOCAL_C_INCLUDES += external/libselinux/include
@@ -390,7 +394,7 @@ else
     LOCAL_LDFLAGS += -Wl,-dynamic-linker,/sbin/linker64
 endif
 ifneq ($(TW_USE_TOOLBOX), true)
-    LOCAL_REQUIRED_MODULES += busybox_symlinks
+    LOCAL_ADDITIONAL_DEPENDENCIES += busybox_symlinks
     ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
         LOCAL_POST_INSTALL_CMD := \
             $(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/sbin && \
@@ -578,7 +582,7 @@ LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libfusesideload
-LOCAL_SHARED_LIBRARIES := libcutils libc
+LOCAL_SHARED_LIBRARIES := libcutils libc libbase
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
     LOCAL_C_INCLUDES := $(LOCAL_PATH)/libmincrypt/includes
     LOCAL_SHARED_LIBRARIES += libmincrypttwrp
@@ -634,6 +638,7 @@ endif
 LOCAL_MODULE := librecovery
 LOCAL_STATIC_LIBRARIES := \
     libminui \
+    libotautil \
     libvintf_recovery \
     libcrypto_utils \
     libcrypto \
@@ -645,6 +650,7 @@ include $(BUILD_STATIC_LIBRARY)
 # shared libaosprecovery for Apache code
 # ===============================
 include $(CLEAR_VARS)
+
 
 LOCAL_MODULE := libaosprecovery
 LOCAL_MODULE_TAGS := eng optional
@@ -672,31 +678,42 @@ ifeq ($(AB_OTA_UPDATER),true)
     LOCAL_CFLAGS += -DAB_OTA_UPDATER=1
 endif
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -ge 26; echo $$?),0)
-    LOCAL_SRC_FILES += otautil/ZipUtil.cpp otautil/SysUtil.cpp
+    LOCAL_SRC_FILES += otautil/ZipUtil.cpp otautil/SysUtil.cpp otautil/DirUtil.cpp
     LOCAL_SHARED_LIBRARIES += libziparchive libext4_utils libcrypto libcrypto_utils
     LOCAL_STATIC_LIBRARIES += libvintf_recovery libfs_mgr liblogwrap libavb libvintf libtinyxml2 libz
-    LOCAL_WHOLE_STATIC_LIBRARIES +=
+    LOCAL_C_INCLUDES += $(LOCAL_PATH)/otautil/include
+    ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
+        # Android 9.0 needs c++17 for libvintf
+        LOCAL_CPPFLAGS += -std=c++17
+        # Android 9.0's libvintf also needs this library
+        LOCAL_STATIC_LIBRARIES += libhidl-gen-utils
+    endif
 else
     LOCAL_CFLAGS += -DUSE_MINZIP
 endif
 
 include $(BUILD_SHARED_LIBRARY)
-
-# All the APIs for testing
+# libverifier (static library)
+# ===============================
 include $(CLEAR_VARS)
 LOCAL_CLANG := true
 LOCAL_MODULE := libverifier
 LOCAL_SRC_FILES := \
     asn1_decoder.cpp \
-    verifier.cpp \
-    ui.cpp
-LOCAL_STATIC_LIBRARIES := libcrypto_static
+    verifier.cpp
+LOCAL_STATIC_LIBRARIES := \
+    libotautil \
+    libcrypto_utils \
+    libcrypto \
+    libbase
+LOCAL_CFLAGS := -Wall -Werror
 include $(BUILD_STATIC_LIBRARY)
 
 # Wear default device
 # ===============================
 include $(CLEAR_VARS)
 LOCAL_SRC_FILES := wear_device.cpp
+LOCAL_CFLAGS := -Wall -Werror
 
 # Should match TARGET_RECOVERY_UI_LIB in BoardConfig.mk.
 LOCAL_MODULE := librecovery_ui_wear
@@ -708,6 +725,7 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := vr_device.cpp
+LOCAL_CFLAGS := -Wall -Werror
 
 # should match TARGET_RECOVERY_UI_LIB set in BoardConfig.mk
 LOCAL_MODULE := librecovery_ui_vr
@@ -716,20 +734,19 @@ include $(BUILD_STATIC_LIBRARY)
 
 commands_recovery_local_path := $(LOCAL_PATH)
 
+#    $(LOCAL_PATH)/edify/Android.mk
+#    $(LOCAL_PATH)/otafault/Android.mk
+#    $(LOCAL_PATH)/bootloader_message/Android.mk
 include \
-    $(LOCAL_PATH)/applypatch/Android.mk \
-    $(LOCAL_PATH)/boot_control/Android.mk \
-    $(LOCAL_PATH)/edify/Android.mk \
-    $(LOCAL_PATH)/otafault/Android.mk \
-    $(LOCAL_PATH)/tests/Android.mk \
-    $(LOCAL_PATH)/tools/Android.mk \
-    $(LOCAL_PATH)/updater/Android.mk \
-    $(LOCAL_PATH)/update_verifier/Android.mk \
-    $(LOCAL_PATH)/bootloader_message/Android.mk \
-    $(LOCAL_PATH)/bootloader_message_twrp/Android.mk
+    $(commands_TWRP_local_path)/boot_control/Android.mk \
+    $(commands_TWRP_local_path)/tests/Android.mk \
+    $(commands_TWRP_local_path)/tools/Android.mk \
+    $(commands_TWRP_local_path)/updater/Android.mk \
+    $(commands_TWRP_local_path)/update_verifier/Android.mk \
+    $(commands_TWRP_local_path)/bootloader_message_twrp/Android.mk
 
 ifeq ($(wildcard system/core/uncrypt/Android.mk),)
-    include $(commands_recovery_local_path)/uncrypt/Android.mk
+    #include $(commands_TWRP_local_path)/uncrypt/Android.mk
 endif
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 22; echo $$?),0)
@@ -737,81 +754,79 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 22; echo $$?),0)
         TARGET_GLOBAL_CFLAGS += -DTW_USE_MINUI_WITH_DATA
         CLANG_TARGET_GLOBAL_CFLAGS += -DTW_USE_MINUI_WITH_DATA
     endif
-    include $(commands_recovery_local_path)/minadbd/Android.mk \
-        $(commands_recovery_local_path)/minui/Android.mk
+    include $(commands_TWRP_local_path)/minadbd/Android.mk \
+        $(commands_TWRP_local_path)/minui/Android.mk
 else
     TARGET_GLOBAL_CFLAGS += -DTW_USE_MINUI_21
-    include $(commands_recovery_local_path)/minadbd21/Android.mk \
-        $(commands_recovery_local_path)/minui21/Android.mk
+    include $(commands_TWRP_local_path)/minadbd21/Android.mk \
+        $(commands_TWRP_local_path)/minui21/Android.mk
 endif
 
+#$(commands_TWRP_local_path)/otautil/Android.mk
 #includes for TWRP
-include $(commands_recovery_local_path)/injecttwrp/Android.mk \
-    $(commands_recovery_local_path)/htcdumlock/Android.mk \
-    $(commands_recovery_local_path)/gui/Android.mk \
-    $(commands_recovery_local_path)/mmcutils/Android.mk \
-    $(commands_recovery_local_path)/bmlutils/Android.mk \
-    $(commands_recovery_local_path)/prebuilt/Android.mk \
-    $(commands_recovery_local_path)/mtdutils/Android.mk \
-    $(commands_recovery_local_path)/flashutils/Android.mk \
-    $(commands_recovery_local_path)/pigz/Android.mk \
-    $(commands_recovery_local_path)/libtar/Android.mk \
-    $(commands_recovery_local_path)/libcrecovery/Android.mk \
-    $(commands_recovery_local_path)/libblkid/Android.mk \
-    $(commands_recovery_local_path)/minuitwrp/Android.mk \
-    $(commands_recovery_local_path)/otautil/Android.mk \
-    $(commands_recovery_local_path)/openaes/Android.mk \
-    $(commands_recovery_local_path)/toolbox/Android.mk \
-    $(commands_recovery_local_path)/twrpTarMain/Android.mk \
-    $(commands_recovery_local_path)/mtp/Android.mk \
-    $(commands_recovery_local_path)/minzip/Android.mk \
-    $(commands_recovery_local_path)/dosfstools/Android.mk \
-    $(commands_recovery_local_path)/etc/Android.mk \
-    $(commands_recovery_local_path)/toybox/Android.mk \
-    $(commands_recovery_local_path)/simg2img/Android.mk \
-    $(commands_recovery_local_path)/adbbu/Android.mk \
-    $(commands_recovery_local_path)/libpixelflinger/Android.mk \
-    $(commands_recovery_local_path)/twrpDigest/Android.mk \
-    $(commands_recovery_local_path)/attr/Android.mk
+include $(commands_TWRP_local_path)/injecttwrp/Android.mk \
+    $(commands_TWRP_local_path)/htcdumlock/Android.mk \
+    $(commands_TWRP_local_path)/gui/Android.mk \
+    $(commands_TWRP_local_path)/mmcutils/Android.mk \
+    $(commands_TWRP_local_path)/bmlutils/Android.mk \
+    $(commands_TWRP_local_path)/prebuilt/Android.mk \
+    $(commands_TWRP_local_path)/mtdutils/Android.mk \
+    $(commands_TWRP_local_path)/flashutils/Android.mk \
+    $(commands_TWRP_local_path)/pigz/Android.mk \
+    $(commands_TWRP_local_path)/libtar/Android.mk \
+    $(commands_TWRP_local_path)/libcrecovery/Android.mk \
+    $(commands_TWRP_local_path)/libblkid/Android.mk \
+    $(commands_TWRP_local_path)/minuitwrp/Android.mk \
+    $(commands_TWRP_local_path)/openaes/Android.mk \
+    $(commands_TWRP_local_path)/toolbox/Android.mk \
+    $(commands_TWRP_local_path)/twrpTarMain/Android.mk \
+    $(commands_TWRP_local_path)/mtp/Android.mk \
+    $(commands_TWRP_local_path)/minzip/Android.mk \
+    $(commands_TWRP_local_path)/dosfstools/Android.mk \
+    $(commands_TWRP_local_path)/etc/Android.mk \
+    $(commands_TWRP_local_path)/toybox/Android.mk \
+    $(commands_TWRP_local_path)/simg2img/Android.mk \
+    $(commands_TWRP_local_path)/adbbu/Android.mk \
+    $(commands_TWRP_local_path)/libpixelflinger/Android.mk \
+    $(commands_TWRP_local_path)/twrpDigest/Android.mk \
+    $(commands_TWRP_local_path)/attr/Android.mk
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
-    include $(commands_recovery_local_path)/libmincrypt/Android.mk
+    include $(commands_TWRP_local_path)/libmincrypt/Android.mk
 endif
 
 ifeq ($(TW_INCLUDE_CRYPTO), true)
-    include $(commands_recovery_local_path)/crypto/lollipop/Android.mk
-    include $(commands_recovery_local_path)/crypto/scrypt/Android.mk
+    include $(commands_TWRP_local_path)/crypto/lollipop/Android.mk
+    include $(commands_TWRP_local_path)/crypto/scrypt/Android.mk
     ifeq ($(TW_INCLUDE_CRYPTO_FBE), true)
-        include $(commands_recovery_local_path)/crypto/ext4crypt/Android.mk
+        include $(commands_TWRP_local_path)/crypto/ext4crypt/Android.mk
     endif
     ifneq ($(TW_CRYPTO_USE_SYSTEM_VOLD),)
     ifneq ($(TW_CRYPTO_USE_SYSTEM_VOLD),false)
-        include $(commands_recovery_local_path)/crypto/vold_decrypt/Android.mk
+        include $(commands_TWRP_local_path)/crypto/vold_decrypt/Android.mk
     endif
     endif
-    include $(commands_recovery_local_path)/gpt/Android.mk
+    include $(commands_TWRP_local_path)/gpt/Android.mk
 endif
 ifeq ($(BUILD_ID), GINGERBREAD)
     TW_NO_EXFAT := true
 endif
 ifneq ($(TW_NO_EXFAT), true)
-    include $(commands_recovery_local_path)/exfat/mkfs/Android.mk \
-            $(commands_recovery_local_path)/exfat/fsck/Android.mk \
-            $(commands_recovery_local_path)/fuse/Android.mk \
-            $(commands_recovery_local_path)/exfat/libexfat/Android.mk
+    include $(commands_TWRP_local_path)/exfat/mkfs/Android.mk \
+            $(commands_TWRP_local_path)/exfat/fsck/Android.mk \
+            $(commands_TWRP_local_path)/fuse/Android.mk \
+            $(commands_TWRP_local_path)/exfat/libexfat/Android.mk
     ifneq ($(TW_NO_EXFAT_FUSE), true)
-        include $(commands_recovery_local_path)/exfat/fuse/Android.mk
+        include $(commands_TWRP_local_path)/exfat/fuse/Android.mk
     endif
 endif
 ifneq ($(TW_OEM_BUILD),true)
-    include $(commands_recovery_local_path)/orscmd/Android.mk
+    include $(commands_TWRP_local_path)/orscmd/Android.mk
 endif
 
 # FB2PNG
 ifeq ($(TW_INCLUDE_FB2PNG), true)
-    include $(commands_recovery_local_path)/fb2png/Android.mk
+    include $(commands_TWRP_local_path)/fb2png/Android.mk
 endif
-
-commands_recovery_local_path :=
 
 endif

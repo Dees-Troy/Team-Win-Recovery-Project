@@ -320,7 +320,7 @@ static int probe_ext4(blkid_probe pr,
 			.kboff = EXT_SB_KBOFF, \
 			.sboff = EXT_MAG_OFF \
 		}, \
-		{ NULL } \
+		{ NULL, 0, 0, 0 } \
 	}
 
 const struct blkid_idinfo jbd_idinfo =

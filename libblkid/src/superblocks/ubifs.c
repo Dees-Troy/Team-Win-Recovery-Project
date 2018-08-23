@@ -116,6 +116,6 @@ const struct blkid_idinfo ubifs_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x31\x18\x10\x06", .len = 4 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };

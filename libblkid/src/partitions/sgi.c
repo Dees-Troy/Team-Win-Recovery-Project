@@ -81,7 +81,7 @@ const struct blkid_idinfo sgi_pt_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x0B\xE5\xA9\x41", .len = 4	},
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

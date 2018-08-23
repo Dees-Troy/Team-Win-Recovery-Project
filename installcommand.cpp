@@ -75,7 +75,7 @@ bool read_metadata_from_package(ZipWrap* zip, std::string* meta_data) {
 }
 
 // Read the build.version.incremental of src/tgt from the metadata and log it to last_install.
-static void read_source_target_build(ZipWrap* zip, std::vector<std::string>& log_buffer) {
+void read_source_target_build(ZipWrap* zip/*, std::vector<std::string>& log_buffer*/) {
     std::string meta_data;
     if (!read_metadata_from_package(zip, &meta_data)) {
         return;
@@ -89,14 +89,16 @@ static void read_source_target_build(ZipWrap* zip, std::vector<std::string>& log
         if (android::base::StartsWith(str, "pre-build-incremental")){
             int source_build = parse_build_number(str);
             if (source_build != -1) {
-                log_buffer.push_back(android::base::StringPrintf("source_build: %d",
-                        source_build));
+                printf("source_build: %d\n", source_build);
+                /*log_buffer.push_back(android::base::StringPrintf("source_build: %d",
+                        source_build));*/
             }
         } else if (android::base::StartsWith(str, "post-build-incremental")) {
             int target_build = parse_build_number(str);
             if (target_build != -1) {
-                log_buffer.push_back(android::base::StringPrintf("target_build: %d",
-                        target_build));
+                printf("target_build: %d\n", target_build);
+                /*log_buffer.push_back(android::base::StringPrintf("target_build: %d",
+                        target_build));*/
             }
         }
     }
@@ -163,7 +165,7 @@ static int check_newer_ab_build(ZipWrap* zip)
 }
 
 int
-abupdate_binary_command(const char* path, ZipWrap* zip, int retry_count,
+abupdate_binary_command(const char* path, ZipWrap* zip, int retry_count __unused,
                       int status_fd, std::vector<std::string>* cmd)
 {
     int ret = check_newer_ab_build(zip);
@@ -298,7 +300,7 @@ bool verify_package_compatibility(ZipWrap *zw) {
   }
   CloseArchive(zip_handle);
 
-  // VintfObjectRecovery::CheckCompatibility returns zero on success.
+  // VintfObjectRecovery::CheckCompatibility returns zero on success. TODO THIS CAUSES A WEIRD COMPILE ERROR
   std::string err;
   int result = android::vintf::VintfObjectRecovery::CheckCompatibility(compatibility_info, &err);
   if (result == 0) {

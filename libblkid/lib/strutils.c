@@ -192,7 +192,7 @@ void *mempcpy(void *restrict dest, const void *restrict src, size_t n)
 #ifndef HAVE_STRNLEN
 size_t strnlen(const char *s, size_t maxlen)
 {
-        int i;
+        size_t i;
 
         for (i = 0; i < maxlen; i++) {
                 if (s[i] == '\0')

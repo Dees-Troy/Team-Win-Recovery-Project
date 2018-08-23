@@ -70,7 +70,7 @@ static int get_minix_version(const unsigned char *data, int *other_endian)
 	return version;
 }
 
-static int probe_minix(blkid_probe pr, const struct blkid_idmag *mag)
+static int probe_minix(blkid_probe pr, const struct blkid_idmag *mag __unused)
 {
 	unsigned char *ext;
 	const unsigned char *data;
@@ -155,7 +155,7 @@ const struct blkid_idinfo minix_idinfo =
 		/* version 3 - BE */
 		{ .magic = "\115\132", .len = 2, .kboff = 1, .sboff = 0x18 },
 
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

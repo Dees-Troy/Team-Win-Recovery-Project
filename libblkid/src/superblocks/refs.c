@@ -20,7 +20,7 @@ const struct blkid_idinfo refs_idinfo =
 	.magics		=
 	{
 		{ .magic = "\000\000\000ReFS\000", .len = 8 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

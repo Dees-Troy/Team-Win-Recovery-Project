@@ -84,7 +84,7 @@ const struct blkid_idinfo vmfs_fs_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x5e\xf1\xab\x2f", .len = 4, .kboff = 2048 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
@@ -96,6 +96,6 @@ const struct blkid_idinfo vmfs_volume_idinfo =
 	.magics		=
 	{
 		{ .magic = "\x0d\xd0\x01\xc0", .len = 4, .kboff = 1024 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };

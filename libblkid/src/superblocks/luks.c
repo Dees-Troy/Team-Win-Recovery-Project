@@ -61,6 +61,6 @@ const struct blkid_idinfo luks_idinfo =
 	.magics		=
 	{
 		{ .magic = "LUKS\xba\xbe", .len = 6 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };

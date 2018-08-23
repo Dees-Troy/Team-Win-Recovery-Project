@@ -186,7 +186,7 @@ const struct blkid_idinfo lvm2_idinfo =
 		{ .magic = "LVM2 001", .len = 8, .sboff = 0x018 },
 		{ .magic = "LVM2 001", .len = 8, .kboff = 1, .sboff = 0x018 },
 		{ .magic = "LVM2 001", .len = 8, .kboff = 1, .sboff = 0x218 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
@@ -198,7 +198,7 @@ const struct blkid_idinfo lvm1_idinfo =
 	.magics		=
 	{
 		{ .magic = "HM", .len = 2 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
@@ -209,7 +209,7 @@ const struct blkid_idinfo snapcow_idinfo =
 	.magics		=
 	{
 		{ .magic = "SnAp", .len = 4 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
@@ -221,6 +221,6 @@ const struct blkid_idinfo verity_hash_idinfo =
 	.magics		=
 	{
 		{ .magic = "verity\0\0", .len = 8 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };

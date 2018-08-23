@@ -65,7 +65,7 @@ const struct blkid_idinfo jfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "JFS1", .len = 4, .kboff = 32 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

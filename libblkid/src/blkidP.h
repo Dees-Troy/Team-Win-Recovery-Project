@@ -166,7 +166,7 @@ struct blkid_idinfo
 	struct blkid_idmag	magics[];	/* NULL or array with magic strings */
 };
 
-#define BLKID_NONE_MAGIC	{{ NULL }}
+#define BLKID_NONE_MAGIC	{{ NULL, 0, 0, 0 }}
 
 /*
  * tolerant FS - can share the same device with more filesystems (e.g. typical

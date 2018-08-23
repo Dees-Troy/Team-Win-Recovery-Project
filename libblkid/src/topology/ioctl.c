@@ -31,9 +31,9 @@ static struct topology_val {
 
 } topology_vals[] = {
 	{ BLKALIGNOFF, NULL, blkid_topology_set_alignment_offset },
-	{ BLKIOMIN, blkid_topology_set_minimum_io_size },
-	{ BLKIOOPT, blkid_topology_set_optimal_io_size },
-	{ BLKPBSZGET, blkid_topology_set_physical_sector_size }
+	{ BLKIOMIN, blkid_topology_set_minimum_io_size, NULL },
+	{ BLKIOOPT, blkid_topology_set_optimal_io_size, NULL },
+	{ BLKPBSZGET, blkid_topology_set_physical_sector_size, NULL }
 	/* we read BLKSSZGET in topology.c */
 };
 

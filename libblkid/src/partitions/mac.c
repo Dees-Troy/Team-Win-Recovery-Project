@@ -186,7 +186,7 @@ const struct blkid_idinfo mac_pt_idinfo =
 	{
 		/* big-endian magic string */
 		{ .magic = "\x45\x52", .len = 2 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

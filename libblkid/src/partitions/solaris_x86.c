@@ -148,7 +148,7 @@ const struct blkid_idinfo solaris_x86_pt_idinfo =
 		  .len = 4,			/* v_sanity size in bytes */
 		  .sboff = SOLARIS_MAGICOFFSET	/* offset of v_sanity */
 		},
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

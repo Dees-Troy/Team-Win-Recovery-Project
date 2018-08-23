@@ -55,7 +55,7 @@ const struct blkid_idinfo cramfs_idinfo =
 	{
 		{ "\x45\x3d\xcd\x28", 4, 0, 0 },
 		{ "\x28\xcd\x3d\x45", 4, 0, 0 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

@@ -302,7 +302,7 @@ const struct blkid_idinfo hfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "BD", .len = 2, .kboff = 1 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
@@ -316,6 +316,6 @@ const struct blkid_idinfo hfsplus_idinfo =
 		{ .magic = "BD", .len = 2, .kboff = 1 },
 		{ .magic = "H+", .len = 2, .kboff = 1 },
 		{ .magic = "HX", .len = 2, .kboff = 1 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };

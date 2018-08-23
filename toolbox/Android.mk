@@ -77,6 +77,12 @@ ifeq ($(TW_USE_TOOLBOX), true)
                 uptime \
                 watchprops
         endif
+        ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
+            # Special rules for 9.0
+            OUR_TOOLS += getevent
+            LOCAL_C_INCLUDES += $(TWRP_TOOLBOX_PATH)
+            LOCAL_WHOLE_STATIC_LIBRARIES += libtoolbox_dd
+        endif
     else
         ifneq (,$(filter $(PLATFORM_SDK_VERSION), 21 22))
             OUR_TOOLS += \
@@ -240,11 +246,19 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 23; echo $$?),0)
         ../../../$(TWRP_TOOLBOX_PATH)/stop.c
     OUR_TOOLS += start stop
 endif
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
+    LOCAL_SRC_FILES += getprop.cpp
+    LOCAL_SHARED_LIBRARIES += libbase
+    LOCAL_STATIC_LIBRARIES += libpropertyinfoparser
+    LOCAL_CPPFLAGS += -std=c++17
+    OUR_TOOLS += getprop
+endif
 
 LOCAL_MODULE := toolbox_recovery
 LOCAL_MODULE_STEM := toolbox
 LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)/sbin
 LOCAL_MODULE_TAGS := optional
+LOCAL_CFLAGS += -Wno-unused-parameter -Wno-unused-const-variable
 
 # Including this will define $(intermediates) below
 include $(BUILD_EXECUTABLE)
@@ -260,7 +274,6 @@ endif
 TOOLS_H := $(intermediates)/tools.h
 $(TOOLS_H): PRIVATE_TOOLS := $(ALL_TOOLS)
 $(TOOLS_H): PRIVATE_CUSTOM_TOOL = echo "/* file generated automatically */" > $@ ; for t in $(PRIVATE_TOOLS) ; do echo "TOOL($$t)" >> $@ ; done
-$(TOOLS_H): $(LOCAL_PATH)/Android.mk
 $(TOOLS_H):
 	$(transform-generated-source)
 
@@ -273,7 +286,7 @@ ALL_TOOLS := $(TEMP_TOOLS)
 # Make /sbin/toolbox launchers for each tool
 SYMLINKS := $(addprefix $(TARGET_RECOVERY_ROOT_OUT)/sbin/,$(ALL_TOOLS))
 $(SYMLINKS): TOOLBOX_BINARY := $(LOCAL_MODULE_STEM)
-$(SYMLINKS): $(LOCAL_INSTALLED_MODULE) $(LOCAL_PATH)/Android.mk
+$(SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 	@echo "Symlink: $@ -> $(TOOLBOX_BINARY)"
 	@mkdir -p $(dir $@)
 	@rm -rf $@

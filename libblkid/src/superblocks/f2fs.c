@@ -94,6 +94,6 @@ const struct blkid_idinfo f2fs_idinfo =
 			.kboff = F2FS_SB1_KBOFF,
 			.sboff = F2FS_MAGIC_OFF
 		},
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };

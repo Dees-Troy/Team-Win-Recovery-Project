@@ -82,7 +82,7 @@ const struct blkid_idinfo squashfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "hsqs", .len = 4 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
@@ -95,7 +95,7 @@ const struct blkid_idinfo squashfs3_idinfo =
 	{
 		{ .magic = "sqsh", .len = 4 }, /* big endian */
 		{ .magic = "hsqs", .len = 4 }, /* little endian */
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

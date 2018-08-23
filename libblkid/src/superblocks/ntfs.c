@@ -218,7 +218,7 @@ const struct blkid_idinfo ntfs_idinfo =
 	.magics		=
 	{
 		{ .magic = "NTFS    ", .len = 8, .sboff = 3 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 

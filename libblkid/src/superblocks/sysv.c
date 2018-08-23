@@ -136,7 +136,7 @@ const struct blkid_idinfo xenix_idinfo =
 	{
 		{ .magic = "\x2b\x55\x44", .len = 3, .kboff = 1, .sboff = 0x400 },
 		{ .magic = "\x44\x55\x2b", .len = 3, .kboff = 1, .sboff = 0x400 },
-		{ NULL }
+		{ NULL, 0, 0, 0 }
 	}
 };
 
