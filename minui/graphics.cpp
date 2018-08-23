@@ -44,9 +44,11 @@ static int overscan_percent = OVERSCAN_PERCENT;
 static int overscan_offset_x = 0;
 static int overscan_offset_y = 0;
 
-//static unsigned char gr_current_r = 255;
-//static unsigned char gr_current_g = 255;
-//static unsigned char gr_current_b = 255;
+#ifdef TW_NO_MINUI_CUSTOM_FONTS
+static unsigned char gr_current_r = 255;
+static unsigned char gr_current_g = 255;
+static unsigned char gr_current_b = 255;
+#endif
 static unsigned char gr_current_a = 255;
 static unsigned char rgb_555[2];
 static unsigned char gr_current_r5 = 31;
@@ -114,7 +116,8 @@ void blend_16bpp(unsigned char* px, unsigned r5, unsigned g5, unsigned b5, unsig
     *px++ = (newred << 3) + (newgreen >> 3);
 }
 
-/*static void text_blend_old(unsigned char* src_p, int src_row_bytes,
+#ifdef TW_NO_MINUI_CUSTOM_FONTS
+static void text_blend_old(unsigned char* src_p, int src_row_bytes,
                        unsigned char* dst_p, int dst_row_bytes,
                        int width, int height)
 {
@@ -154,7 +157,8 @@ void blend_16bpp(unsigned char* px, unsigned r5, unsigned g5, unsigned b5, unsig
         src_p += src_row_bytes;
         dst_p += dst_row_bytes;
     }
-}*/
+}
+#endif // TW_NO_MINUI_CUSTOM_FONTS
 
 // Blends gr_current onto pix value, assumes alpha as most significant byte.
 static inline uint16_t pixel_blend16(uint8_t a, uint16_t pix) {
@@ -413,6 +417,18 @@ void gr_convert_rgb_555(unsigned char r, unsigned char g, unsigned char b)
 }
 
 void gr_color(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+#ifdef TW_NO_MINUI_CUSTOM_FONTS
+#if defined(RECOVERY_ABGR) || defined(RECOVERY_BGRA)
+  gr_current_r = b;
+  gr_current_g = g;
+  gr_current_b = r;
+#else
+  gr_current_r = r;
+  gr_current_g = g;
+  gr_current_b = b;
+#endif
+#endif
+
   if (gr_draw->pixel_bytes == 2) {
 	gr_current_a = a;
     gr_convert_rgb_555(r, g, b);

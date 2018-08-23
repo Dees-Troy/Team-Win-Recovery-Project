@@ -88,6 +88,7 @@ LOCAL_C_INCLUDES += \
 
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
     LOCAL_C_INCLUDES += external/stlport/stlport
+    LOCAL_CFLAGS += -DUSE_FUSE_SIDELOAD22
 endif
 
 LOCAL_CFLAGS += -DTWRES=\"$(TWRES_PATH)\"

@@ -240,11 +240,13 @@ ifneq ($(TW_USE_TOOLBOX), true)
 endif
 endif
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 23; echo $$?),0)
+    ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 28; echo $$?),0)
     # Rule for making start and stop in N trees
     LOCAL_SRC_FILES += \
         ../../../$(TWRP_TOOLBOX_PATH)/start.c \
         ../../../$(TWRP_TOOLBOX_PATH)/stop.c
     OUR_TOOLS += start stop
+    endif
 endif
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
     LOCAL_SRC_FILES += getprop.cpp

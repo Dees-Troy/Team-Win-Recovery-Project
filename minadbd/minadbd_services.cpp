@@ -117,7 +117,11 @@ static int create_service_thread(void (*func)(int, const std::string&), const st
 }
 #endif
 
+#if PLATFORM_SDK_VERSION >= 28
 int service_to_fd(const char* name, atransport* /* transport */) {
+#else
+int service_to_fd(const char* name, const atransport* transport __unused) {
+#endif
   int ret = -1;
 
   if (!strncmp(name, "sideload:", 9)) {

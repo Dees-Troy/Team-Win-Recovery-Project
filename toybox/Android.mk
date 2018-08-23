@@ -546,6 +546,8 @@ ALL_TOOLS += \
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
 ALL_TOOLS += \
     fmt \
+    start \
+    stop \
     stty
 endif
 endif

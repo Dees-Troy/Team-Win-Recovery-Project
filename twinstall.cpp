@@ -211,8 +211,6 @@ static int Run_Update_Binary(const char *path, ZipWrap *Zip, int* wipe_cache, zi
 	char buffer[1024];
 	FILE* child_data;
 
-	read_source_target_build(Zip);
-
 #ifndef TW_NO_LEGACY_PROPS
 	if (!update_binary_has_legacy_properties(TMP_UPDATER_BINARY_PATH)) {
 		LOGINFO("Legacy property environment not used in updater.\n");

@@ -69,8 +69,8 @@
 #include <string>
 #include <vector>
 
-#include <android-base/stringprintf.h>
-#include <android-base/unique_fd.h>
+//#include <android-base/stringprintf.h>
+//#include <android-base/unique_fd.h>
 
 static constexpr uint64_t PACKAGE_FILE_ID = FUSE_ROOT_ID + 1;
 static constexpr uint64_t EXIT_FLAG_ID = FUSE_ROOT_ID + 2;
@@ -162,7 +162,7 @@ static int handle_init(void* data, fuse_data* fd, const fuse_in_header* hdr) {
 
 static void fill_attr(fuse_attr* attr, const fuse_data* fd, uint64_t nodeid, uint64_t size,
                       uint32_t mode) {
-  *attr = {};
+  memset(attr, 0, sizeof(*attr));
   attr->nlink = 1;
   attr->uid = fd->uid;
   attr->gid = fd->gid;
@@ -175,7 +175,8 @@ static void fill_attr(fuse_attr* attr, const fuse_data* fd, uint64_t nodeid, uin
 }
 
 static int handle_getattr(void* /* data */, const fuse_data* fd, const fuse_in_header* hdr) {
-  fuse_attr_out out = {};
+  struct fuse_attr_out out;
+  memset(&out, 0, sizeof(out));
   out.attr_valid = 10;
 
   if (hdr->nodeid == FUSE_ROOT_ID) {
@@ -195,7 +196,8 @@ static int handle_getattr(void* /* data */, const fuse_data* fd, const fuse_in_h
 static int handle_lookup(void* data, const fuse_data* fd, const fuse_in_header* hdr) {
   if (data == nullptr) return -ENOENT;
 
-  fuse_entry_out out = {};
+  struct fuse_entry_out out;
+  memset(&out, 0, sizeof(out));
   out.entry_valid = 10;
   out.attr_valid = 10;
 
@@ -220,7 +222,8 @@ static int handle_open(void* /* data */, const fuse_data* fd, const fuse_in_head
   if (hdr->nodeid == EXIT_FLAG_ID) return -EPERM;
   if (hdr->nodeid != PACKAGE_FILE_ID) return -ENOENT;
 
-  fuse_open_out out = {};
+  struct fuse_open_out out;
+  memset(&out, 0, sizeof(out));
   out.fh = 10;  // an arbitrary number; we always use the same handle
   fuse_reply(fd, hdr->unique, &out, sizeof(out));
   return NO_STATUS;
@@ -371,7 +374,8 @@ int run_fuse_sideload(const provider_vtab& vtab, uint64_t file_size, uint32_t bl
     return -1;
   }
 
-  fuse_data fd = {};
+  fuse_data fd;
+  memset(&fd, 0, sizeof(fd));
   fd.vtab = vtab;
   fd.file_size = file_size;
   fd.block_size = block_size;

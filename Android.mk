@@ -115,6 +115,7 @@ LOCAL_C_INCLUDES += \
 LOCAL_C_INCLUDES += bionic
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
     LOCAL_C_INCLUDES += external/stlport/stlport external/openssl/include
+    LOCAL_CFLAGS += -DUSE_FUSE_SIDELOAD22
 else
     LOCAL_C_INCLUDES += external/boringssl/include external/libcxx/include
 endif
@@ -536,7 +537,7 @@ $(RECOVERY_BUSYBOX_SYMLINKS): $(LOCAL_INSTALLED_MODULE)
 include $(CLEAR_VARS)
 LOCAL_MODULE := busybox_symlinks
 LOCAL_MODULE_TAGS := optional
-LOCAL_REQUIRED_MODULES := $(RECOVERY_BUSYBOX_SYMLINKS)
+LOCAL_ADDITIONAL_DEPENDENCIES := $(RECOVERY_BUSYBOX_SYMLINKS)
 ifneq (,$(filter $(PLATFORM_SDK_VERSION),16 17 18))
 ALL_DEFAULT_INSTALLED_MODULES += $(RECOVERY_BUSYBOX_SYMLINKS)
 endif
@@ -575,14 +576,13 @@ endif
 # shared libfusesideload
 # ===============================
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := fuse_sideload.cpp
 LOCAL_CLANG := true
-LOCAL_CFLAGS := -Wall -Werror
+LOCAL_CFLAGS := -Wall -Werror -Wno-unused-parameter
 LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := libfusesideload
-LOCAL_SHARED_LIBRARIES := libcutils libc libbase
+LOCAL_SHARED_LIBRARIES := libcutils libc
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
     LOCAL_C_INCLUDES := $(LOCAL_PATH)/libmincrypt/includes
     LOCAL_SHARED_LIBRARIES += libmincrypttwrp
@@ -590,14 +590,19 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
 else
     LOCAL_SHARED_LIBRARIES += libcrypto
 endif
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
+    LOCAL_SRC_FILES := fuse_sideload22.cpp
+    LOCAL_CFLAGS += -DUSE_FUSE_SIDELOAD22
+else
+    LOCAL_SRC_FILES := fuse_sideload.cpp
+endif
 include $(BUILD_SHARED_LIBRARY)
 
 # static libfusesideload
 # =============================== (required to fix build errors in 8.1 due to use by tests)
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := fuse_sideload.cpp
 LOCAL_CLANG := true
-LOCAL_CFLAGS := -Wall -Werror
+LOCAL_CFLAGS := -Wall -Werror -Wno-unused-parameter
 LOCAL_CFLAGS += -D_XOPEN_SOURCE -D_GNU_SOURCE
 
 LOCAL_MODULE_TAGS := optional
@@ -609,6 +614,12 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
     LOCAL_CFLAGS += -DUSE_MINCRYPT
 else
     LOCAL_STATIC_LIBRARIES += libcrypto_static
+endif
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
+    LOCAL_SRC_FILES := fuse_sideload22.cpp
+    LOCAL_CFLAGS += -DUSE_FUSE_SIDELOAD22
+else
+    LOCAL_SRC_FILES := fuse_sideload.cpp
 endif
 include $(BUILD_STATIC_LIBRARY)
 
@@ -661,6 +672,7 @@ LOCAL_CFLAGS += -DRECOVERY_API_VERSION=$(RECOVERY_API_VERSION)
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 23; echo $$?),0)
     LOCAL_SHARED_LIBRARIES += libstdc++ libstlport
     LOCAL_C_INCLUDES += bionic external/stlport/stlport
+    LOCAL_CFLAGS += -DUSE_FUSE_SIDELOAD22
 else
     LOCAL_SHARED_LIBRARIES += libc++
 endif
@@ -672,6 +684,7 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
 else
     LOCAL_SHARED_LIBRARIES += libcrypto libbase
     LOCAL_SRC_FILES += verifier.cpp asn1_decoder.cpp
+    LOCAL_C_INCLUDES += $(LOCAL_PATH)/otautil/include
 endif
 
 ifeq ($(AB_OTA_UPDATER),true)
@@ -744,6 +757,10 @@ include \
     $(commands_TWRP_local_path)/updater/Android.mk \
     $(commands_TWRP_local_path)/update_verifier/Android.mk \
     $(commands_TWRP_local_path)/bootloader_message_twrp/Android.mk
+
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -le 25; echo $$?),0)
+include $(commands_TWRP_local_path)/bootloader_message/Android.mk
+endif
 
 ifeq ($(wildcard system/core/uncrypt/Android.mk),)
     #include $(commands_TWRP_local_path)/uncrypt/Android.mk

@@ -168,6 +168,7 @@ int
 abupdate_binary_command(const char* path, ZipWrap* zip, int retry_count __unused,
                       int status_fd, std::vector<std::string>* cmd)
 {
+    read_source_target_build(zip);
     int ret = check_newer_ab_build(zip);
     if (ret) {
         return ret;
@@ -203,6 +204,8 @@ abupdate_binary_command(const char* path, ZipWrap* zip, int retry_count __unused
 }
 
 #else
+
+void read_source_target_build(ZipWrap* zip __unused /*, std::vector<std::string>& log_buffer*/) {return;}
 
 int
 abupdate_binary_command(__unused const char* path, __unused ZipWrap* zip, __unused int retry_count,

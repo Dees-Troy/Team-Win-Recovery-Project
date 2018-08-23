@@ -20,7 +20,8 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-#include <log/log_id.h>
+//#include <log/log_id.h>
+#include <private/android_logger.h> /* private pmsg functions */
 
 static constexpr int KEEP_LOG_COUNT = 10;
 

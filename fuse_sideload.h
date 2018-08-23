@@ -17,6 +17,10 @@
 #ifndef __FUSE_SIDELOAD_H
 #define __FUSE_SIDELOAD_H
 
+#ifdef USE_FUSE_SIDELOAD22
+#include "fuse_sideload22.h"
+#else
+
 #include <functional>
 
 // Define the filenames created by the sideload FUSE filesystem.
@@ -44,6 +48,8 @@ int run_old_fuse_sideload(const struct provider_vtab& vtab, void* cookie,
                       uint64_t file_size, uint32_t block_size);
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif
