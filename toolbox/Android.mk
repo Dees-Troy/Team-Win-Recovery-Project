@@ -77,12 +77,6 @@ ifeq ($(TW_USE_TOOLBOX), true)
                 uptime \
                 watchprops
         endif
-        ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
-            # Special rules for 9.0
-            OUR_TOOLS += getevent
-            LOCAL_C_INCLUDES += $(TWRP_TOOLBOX_PATH)
-            LOCAL_WHOLE_STATIC_LIBRARIES += libtoolbox_dd
-        endif
     else
         ifneq (,$(filter $(PLATFORM_SDK_VERSION), 21 22))
             OUR_TOOLS += \
@@ -166,6 +160,16 @@ ifeq ($(TW_USE_TOOLBOX), true)
     endif
 endif
 
+ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
+    # Special rules for 9.0
+    OUR_TOOLS += getevent
+    LOCAL_C_INCLUDES += $(TWRP_TOOLBOX_PATH)
+    LOCAL_WHOLE_STATIC_LIBRARIES += libtoolbox_dd
+    ifneq ($(TW_USE_TOOLBOX), true)
+        OUR_TOOLS += newfs_msdos
+    endif
+endif
+
 ifneq (,$(filter $(PLATFORM_SDK_VERSION), 21 22))
     ifneq (,$(filter userdebug eng,$(TARGET_BUILD_VARIANT)))
         OUR_TOOLS += r
@@ -233,10 +237,15 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 22; echo $$?),0)
     # including busybox.
 ifneq ($(TW_USE_TOOLBOX), true)
     LOCAL_SRC_FILES += \
-        ../../../$(TWRP_TOOLBOX_PATH)/getprop.c \
         ../../../$(TWRP_TOOLBOX_PATH)/setprop.c \
         ../../../$(TWRP_TOOLBOX_PATH)/ls.c
-    OUR_TOOLS += getprop setprop
+    OUR_TOOLS += setprop
+    ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 28; echo $$?),0)
+        # Special rules for <= 8.1
+        LOCAL_SRC_FILES += \
+            ../../../$(TWRP_TOOLBOX_PATH)/getprop.c
+        OUR_TOOLS += getprop
+    endif
 endif
 endif
 ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 23; echo $$?),0)

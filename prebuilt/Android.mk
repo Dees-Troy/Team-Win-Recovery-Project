@@ -322,9 +322,14 @@ ifeq ($(shell test $(PLATFORM_SDK_VERSION) -gt 27; echo $$?),0)
     RELINK_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/liblogwrap.so
 endif
 
+TW_BB_SYMLINKS :=
+ifneq ($(TW_USE_TOOLBOX), true)
+    TW_BB_SYMLINKS := busybox_symlinks
+endif
+
 TWRP_AUTOGEN := $(intermediates)/teamwin
 GEN := $(intermediates)/teamwin
-$(GEN): $(RELINK)
+$(GEN): $(RELINK) $(TW_BB_SYMLINKS)
 $(GEN): $(RELINK_SOURCE_FILES) $(call intermediates-dir-for,EXECUTABLES,init)/init
 	$(RELINK) $(TARGET_RECOVERY_ROOT_OUT)/sbin $(RELINK_SOURCE_FILES)
 

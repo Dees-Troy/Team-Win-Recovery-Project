@@ -395,7 +395,6 @@ else
     LOCAL_LDFLAGS += -Wl,-dynamic-linker,/sbin/linker64
 endif
 ifneq ($(TW_USE_TOOLBOX), true)
-    LOCAL_ADDITIONAL_DEPENDENCIES += busybox_symlinks
     ifeq ($(shell test $(PLATFORM_SDK_VERSION) -lt 24; echo $$?),0)
         LOCAL_POST_INSTALL_CMD := \
             $(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/sbin && \
@@ -847,3 +846,5 @@ ifeq ($(TW_INCLUDE_FB2PNG), true)
 endif
 
 endif
+
+commands_TWRP_local_path :=
